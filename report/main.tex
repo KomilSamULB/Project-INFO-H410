@@ -155,6 +155,27 @@ Hard & RL & 0.0000 & -56.10 & 0.4086 \\
 strictly avoiding hazards for CSP makes it fail more often under high slip and dense hazards. However, introducing a second CSP that relaxes the hazard constraint if no path is found, restores navigability on the hard setting (boosting success to 0.9916), though at the cost of a lower average return (-31.71) compared to MDP and a longer runtime (1.47s).
 The results show that MDP gives the strongest robustness under high stochasticity (hard success rate 0.9833). CSP replanning is competitive on easy and medium settings, but it fails more often under high slip and dense hazards. RL reaches strong performance on easy and medium settings, but the hard setting shows that finite tabular training can be insufficient in sparse-reward, high-uncertainty conditions.
 
+\section{Parameter Sensitivity Analysis}
+We performed a one-factor-at-a-time sweep (5 values per parameter) and report only the parameter variations that produced a clear behavioral change in success, return, or runtime.
+
+\textbf{Q-learning training budget ($\texttt{ql\_episodes}$).}
+On the medium scenario, increasing training from 500 to 1000 episodes changes success from $0.8167$ to $1.0000$, and improves return from $-16.54$ to $-2.07$. Additional training (1500--4000) mostly preserves success while slightly improving return around the same range. On the hard scenario, however, success remains $0.0000$ across all tested budgets, indicating that budget alone does not solve the hardest regime. As expected, preparation time grows almost linearly with the number of episodes.
+
+\textbf{Q-learning learning rate ($\texttt{ql\_alpha}$).}
+This parameter strongly affects stability on medium difficulty. At $\alpha=0.05$, success drops to $0.1917$ with a return of $-41.96$, while values in $[0.1,0.5]$ recover to $1.0000$ success and much higher returns (between roughly $-1.93$ and $-0.93$). This indicates that too small an update step prevents effective policy improvement within the fixed training horizon.
+
+\textbf{Q-learning discount factor ($\texttt{ql\_gamma}$).}
+On medium difficulty, changing $\gamma$ produces a meaningful return variation (from $-2.28$ at $0.85$ to $-1.10$ at $0.98$) while keeping success at $1.0000$. This confirms that long-term credit assignment remains important even when goal reachability is already high.
+
+\textbf{Q-learning exploration decay ($\texttt{ql\_epsilon\_decay}$).}
+On hard difficulty, this is the only exploration-related parameter that produced a detectable change in success: with decay $0.99$, success reaches $0.0083$, whereas the other tested decays stay at $0.0000$. The effect is small but measurable, suggesting that exploration schedule shape is more influential than start or floor values in this setting.
+
+\textbf{Value Iteration discount factor ($\texttt{vi\_gamma}$).}
+This is the dominant MDP sensitivity on the hard scenario. Success rises from $0.0000$ ($\gamma=0.85$) to $0.1917$ ($\gamma=0.90$), then to $0.9917$ ($\gamma=0.95$), and reaches $1.0000$ for $\gamma\in\{0.98,0.995\}$. At the same time, preparation time increases sharply (about $0.08$s at $0.85$ versus about $0.96$s at $0.995$), highlighting a clear robustness-versus-runtime trade-off.
+
+\textbf{Value Iteration convergence threshold ($\texttt{vi\_theta}$).}
+Across tested values, success and return remain nearly unchanged, but runtime changes substantially: on hard, preparation time drops from about $0.289$s at $10^{-7}$ to about $0.131$s at $10^{-3}$. This parameter is therefore most useful as a computational tuning knob rather than a policy-quality knob in our tested regime.
+
 \section{Qualitative Comparison}Relaxing these safety constraints restores feasibility but leads to sub-optimal paths that accumulate hazard penalties. 
 \textbf{CSP replanning} has the strength of transparent constraints and direct control over safety rules. However, it proves brittle when uncertainty causes frequent replanning or when strict hazard avoidance removes many feasible trajectories. In contrast, \textbf{MDP value iteration} explicitly optimizes the expected long-term return under stochastic transitions, providing strong robustness. Its main drawback is the requirement for a full transition and reward model, alongside a computational cost that grows directly with the state space size. Finally, \textbf{Q-learning} offers the advantage of requiring no prior model, allowing it to adapt purely from interaction. On the downside, it is highly sensitive to the exploration schedule and training budget, and its tabular representation scales poorly as the environment grows.
 
