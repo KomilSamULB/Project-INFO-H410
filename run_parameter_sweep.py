@@ -28,9 +28,9 @@ class BaselineConfig:
     ql_epsilon_decay: float = 0.995
     vi_gamma: float = 0.95
     vi_theta: float = 1e-6
+    csp_fallback: bool = True
 
-
-PARAMETER_GRID: dict[str, list[float | int]] = {
+PARAMETER_GRID: dict[str, list[float | int | bool]] = {
     "ql_episodes": [500, 1000, 1500, 2500, 4000],
     "ql_alpha": [0.05, 0.1, 0.2, 0.3, 0.5],
     "ql_gamma": [0.85, 0.9, 0.95, 0.98, 0.995],
@@ -39,6 +39,7 @@ PARAMETER_GRID: dict[str, list[float | int]] = {
     "ql_epsilon_decay": [0.999, 0.997, 0.995, 0.992, 0.99],
     "vi_gamma": [0.85, 0.9, 0.95, 0.98, 0.995],
     "vi_theta": [1e-3, 1e-4, 1e-5, 1e-6, 1e-7],
+    "csp_fallback": [False, True],
 }
 
 
@@ -91,6 +92,21 @@ def _evaluate_value_iteration(
     return prep_time, metrics
 
 
+def _evaluate_csp(
+    env: StochasticGridWorld,
+    cfg: BaselineConfig,
+    prep_seed: int,
+    eval_seed: int,
+    eval_episodes: int,
+) -> tuple[float, dict[str, float]]:
+    agent = CSPReplanningAgent(env, avoid_hazards=True, fallback_on_hazards=cfg.csp_fallback)
+    t0 = time.perf_counter()
+    agent.prepare(episodes=0, seed=prep_seed)
+    prep_time = time.perf_counter() - t0
+    metrics = evaluate_agent(env, agent, episodes=eval_episodes, seed=eval_seed)
+    return prep_time, metrics
+
+
 def run_parameter_sweep() -> pd.DataFrame:
     baseline = BaselineConfig()
     scenarios = default_scenarios()
@@ -118,9 +134,18 @@ def run_parameter_sweep() -> pd.DataFrame:
                         eval_seed=eval_seed,
                         eval_episodes=120,
                     )
-                else:
+                elif param_name.startswith("vi_"):
                     method = "ValueIteration"
                     prep_time, metrics = _evaluate_value_iteration(
+                        env=env,
+                        cfg=cfg,
+                        prep_seed=prep_seed,
+                        eval_seed=eval_seed,
+                        eval_episodes=120,
+                    )
+                else:
+                    method = "CSPReplanning"
+                    prep_time, metrics = _evaluate_csp(
                         env=env,
                         cfg=cfg,
                         prep_seed=prep_seed,
@@ -149,6 +174,7 @@ def run_parameter_sweep() -> pd.DataFrame:
                         "ql_epsilon_decay": cfg.ql_epsilon_decay,
                         "vi_gamma": cfg.vi_gamma,
                         "vi_theta": cfg.vi_theta,
+                        "csp_fallback": cfg.csp_fallback,
                     }
                 )
 

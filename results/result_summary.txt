@@ -1,29 +1,29 @@
 Main experiments
 scenario  size         method  success_rate  avg_return  avg_steps_on_success  prep_time_sec  eval_time_sec  total_time_sec
-    easy    10  CSPReplanning        1.0000      6.5583               19.1750         0.0000         0.2225          0.2225
-    easy    10 ValueIteration        1.0000      6.8500               19.0167         0.0225         0.0047          0.0272
-    easy    10      QLearning        1.0000      7.0167               18.8500         0.0993         0.0058          0.1051
-  medium    12  CSPReplanning        1.0000     -1.0583               26.8917         0.0000         0.4315          0.4315
-  medium    12 ValueIteration        1.0000     -0.4250               25.9583         0.0525         0.0072          0.0597
-  medium    12      QLearning        1.0000     -0.7833               26.3833         0.1433         0.0073          0.1506
-    hard    14  CSPReplanning        0.9917    -31.7083               38.4118         0.0000         1.4761          1.4761
-    hard    14 ValueIteration        1.0000    -24.0167               39.0167         0.3220         0.0089          0.3309
-    hard    14      QLearning        0.0000    -58.9333                   NaN         0.2213         0.0149          0.2362
+    easy    10  CSPReplanning        1.0000      6.5583               19.1750         0.0000         0.1777          0.1777
+    easy    10 ValueIteration        1.0000      7.0333               18.8333         0.0183         0.0038          0.0221
+    easy    10      QLearning        1.0000      6.7417               19.0250         0.0793         0.0045          0.0838
+  medium    12  CSPReplanning        1.0000     -1.0583               26.8917         0.0000         0.3388          0.3388
+  medium    12 ValueIteration        1.0000     -0.6333               26.3000         0.0379         0.0050          0.0429
+  medium    12      QLearning        1.0000     -1.2500               26.9833         0.1152         0.0065          0.1217
+    hard    14  CSPReplanning        0.0000      0.0000                   NaN         0.0000         0.0211          0.0211
+    hard    14 ValueIteration        0.9833    -24.2333               38.5424         0.2842         0.0078          0.2920
+    hard    14      QLearning        0.0000    -56.8667                   NaN         0.1918         0.0139          0.2056
 
 Scalability experiments
    scenario  size         method  success_rate  avg_return  avg_steps_on_success  prep_time_sec  eval_time_sec  total_time_sec
-scalability     8  CSPReplanning           1.0      8.4125               17.5375         0.0000         0.0720          0.0720
-scalability     8 ValueIteration           1.0      8.7625               17.1375         0.0169         0.0029          0.0198
-scalability     8      QLearning           1.0      7.6750               17.9750         0.0851         0.0035          0.0886
-scalability    10  CSPReplanning           1.0      2.8500               21.8000         0.0000         0.1383          0.1383
-scalability    10 ValueIteration           1.0      3.1125               21.6875         0.0307         0.0035          0.0342
-scalability    10      QLearning           1.0      2.3625               22.2875         0.1089         0.0042          0.1131
-scalability    12  CSPReplanning           1.0     -1.4000               26.9500         0.0000         0.2061          0.2061
-scalability    12 ValueIteration           1.0     -0.5125               26.5125         0.2332         0.0042          0.2374
-scalability    12      QLearning           1.0     -1.2000               27.2000         0.1343         0.0050          0.1394
-scalability    14  CSPReplanning           1.0    -16.4625               32.4625         0.0000         0.4927          0.4927
-scalability    14 ValueIteration           1.0    -10.9500               31.1000         0.0711         0.0048          0.0759
-scalability    14      QLearning           0.0    -56.0000                   NaN         0.2152         0.0095          0.2247
-scalability    16  CSPReplanning           1.0    -31.6125               37.9125         0.0000         1.2649          1.2649
-scalability    16 ValueIteration           1.0    -16.2250               36.5750         0.4202         0.0056          0.4258
-scalability    16      QLearning           0.0    -64.0000                   NaN         0.2500         0.0112          0.2612
+scalability     8  CSPReplanning         1.000      7.3500               17.5500         0.0000         0.0722          0.0722
+scalability     8 ValueIteration         1.000      8.3625               17.4375         0.0151         0.0034          0.0185
+scalability     8      QLearning         1.000      8.3000               17.3500         0.0799         0.0032          0.0831
+scalability    10  CSPReplanning         1.000      2.7500               21.2000         0.0000         0.1378          0.1378
+scalability    10 ValueIteration         1.000      4.4375               21.1625         0.0260         0.0030          0.0289
+scalability    10      QLearning         1.000      3.2375               22.3625         0.0953         0.0038          0.0991
+scalability    12  CSPReplanning         1.000     -2.3875               26.6875         0.0000         0.2031          0.2031
+scalability    12 ValueIteration         1.000     -1.6500               26.7000         0.0411         0.0034          0.0445
+scalability    12      QLearning         1.000     -2.9125               27.1125         0.1216         0.0045          0.1261
+scalability    14  CSPReplanning         1.000     -7.9500               32.7000         0.0000         0.4007          0.4007
+scalability    14 ValueIteration         1.000     -7.0250               32.4250         0.0626         0.0041          0.0667
+scalability    14      QLearning         1.000     -7.8875               32.5875         0.1517         0.0049          0.1567
+scalability    16  CSPReplanning         0.000      0.0000                   NaN         0.0000         0.0253          0.0253
+scalability    16 ValueIteration         1.000    -15.3000               36.2500         0.0873         0.0049          0.0922
+scalability    16      QLearning         0.975    -17.6250               37.1538         0.1925         0.0058          0.1983

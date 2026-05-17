@@ -12,9 +12,10 @@ def _manhattan(a: State, b: State) -> int:
 
 
 class CSPReplanningAgent(Agent):
-    def __init__(self, env: StochasticGridWorld, avoid_hazards: bool = True) -> None:
+    def __init__(self, env: StochasticGridWorld, avoid_hazards: bool = True, fallback_on_hazards: bool = False) -> None:
         self.env = env
         self.avoid_hazards = avoid_hazards
+        self.fallback_on_hazards = fallback_on_hazards
         self.first_print = False
 
     def _planning_blocked(self, hazards_blocked: bool = True) -> set[State]:
@@ -78,7 +79,7 @@ class CSPReplanningAgent(Agent):
                 # We add the next state to the queue to explore it later
                 queue.append(nxt)
 
-        if (hazards_blocked):
+        if hazards_blocked and self.fallback_on_hazards:
             # If we didn't find a path while blocking hazards, we can try again without blocking them
             return self._shortest_feasible_path(
                 start, 
